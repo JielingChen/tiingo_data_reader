@@ -1,5 +1,5 @@
 # %%
-# Description: This script will download historical stock, forex, crypto, mutual fund and ETF data from Tiingo.com using API key and save it in an excel file.
+# Description: This script will download historical stock/forex/crypto/mutual fund/ETF data from Tiingo.com using API key and save it in an Excel file.
 
 import requests
 import pandas as pd
