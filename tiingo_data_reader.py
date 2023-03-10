@@ -1,10 +1,4 @@
 
-# This script will allow users to download historical stock/ETF/mutual fund/forex/crypto data from Tiingo using their API keys.
-
-# The user can define the tickers, start date, end date, and frequency of the data they want to download.
-
-# Free registration is required to get an API key. More info: https://api.tiingo.com/
-
 # %%
 import requests
 import pandas as pd
