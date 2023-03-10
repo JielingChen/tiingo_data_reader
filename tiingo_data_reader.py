@@ -1,6 +1,10 @@
-# %%
-# Description: This script will download historical stock/forex/crypto/mutual fund/ETF data from Tiingo.com using API key and save it in an Excel file.
+# This script will allow users to download historical stock/ETF/mutual fund/forex/crypto data from Tiingo using their API keys.
 
+# The user can define the tickers, start date, end date, and frequency of the data they want to download.
+
+# Free registration is required to get an API key. More info: https://api.tiingo.com/
+
+# %%
 import requests
 import pandas as pd
 from io import BytesIO
@@ -9,13 +13,14 @@ import datetime as dt
 # %%
 def api_key():
     
-    '''This function asks the user for their api key and returns it.'''
+    '''This function asks the user for their api key.'''
     
     api_key = input('Enter your api key: ')
         
     return api_key
 
 # %%
+# a function to get user input
 def configure():
     
     '''This function allows the user to configure the data they want to download.'''
@@ -147,6 +152,7 @@ def get_df(url, ticker):
     return df
 
 # %%
+# main function
 def get_data():
     
     '''This function gets the data from Tiingo according to the user's input and saves it to an excel file.'''
