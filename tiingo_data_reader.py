@@ -1,5 +1,4 @@
 
-# %%
 import requests
 import pandas as pd
 from io import BytesIO
@@ -8,7 +7,7 @@ import datetime as dt
 # %%
 def api_key():
     
-    '''This function asks the user for their api key and returns it. If the user enters "default" the default token is returned.'''
+    '''This function asks the user for their api key.'''
     
     while True:
         
@@ -16,6 +15,7 @@ def api_key():
         print(f'API key: {api_key}')
         print(f'Checking API key...')
         
+        # check if api key is valid
         url = f'https://api.tiingo.com/tiingo/daily/aapl/prices?startDate=2023-01-01&format=csv&token={api_key}'
         try:
             with requests.get(url) as response:
@@ -25,7 +25,7 @@ def api_key():
             break
         
         except:
-            print('Invalid api key. Please try again.')
+            print('Cannot connect to Tiingo. Please try again.')
         
     return api_key
 
@@ -34,14 +34,14 @@ def configure():
     
     '''This function allows the user to configure the data they want to download.'''
 
-    # get tickers from user
+    # get ticker option from user
     valid_ticker_options = ['type', 'upload']
     while True:
         ticker_option = input('Enter "type" to type in tickers or "upload" to upload a list of tickers: ' )
         print(f'Ticker option: {ticker_option}')
         
         if ticker_option in valid_ticker_options:
-                
+            
             if ticker_option == 'upload':
                 print('Please put your tickers in an excel or csv file with no header and then enter the file path.') 
                 # check if file type is valid
@@ -62,7 +62,8 @@ def configure():
         
         print('Invalid option. Please enter "type" to type in tickers or "upload" to upload a ticker list: ')
 
-    
+
+    # get tickers from user
     if ticker_option == 'type':
         tickers = []
         while True:
@@ -74,7 +75,6 @@ def configure():
     
     
     elif ticker_option == 'upload':
-        
         # check if file is valid
         while True:
             try:
@@ -87,10 +87,10 @@ def configure():
                 break
             
             except:
-                print('Error reading file. Please check your file.')
+                print('Error reading file. Please check the file.')
                 file_path = input('Enter the file path: ')
-    
-            
+                print(f'Reading tickers from "{file_path}"')
+                
         # get ticker list from file
         tickers = df.iloc[:, 0].tolist()
         print(f'Tickers uploaded: ')
@@ -114,7 +114,7 @@ def configure():
                 print('Getting weekly data...')
             
             elif frequency == 'annually':
-                print('Getting annual data...')
+                print('Getting annually data...')
 
             break
         
@@ -125,21 +125,23 @@ def configure():
     while True:
         start = input('Enter start date (e.g. 2022-1-1): ')
         print(f'Start date: {start}')
+        # check if date is valid
         try:
             start = dt.datetime.strptime(start, '%Y-%m-%d').date()
-            if start >= dt.datetime.today().date():
+            if start >= dt.date.today():
                 print('Start date cannot be today or later than today. Please enter a valid start date.')
             else: 
                 break
         except:
             print('Invalid date format. Please enter a valid start date.')
-                
+            
     while True:
         end = input('Enter end date (e.g. 2022-1-31): ')
         print(f'End date: {end}')
+        # check if date is valid
         try:
             end = dt.datetime.strptime(end, '%Y-%m-%d').date()
-            if end >= dt.datetime.today().date():
+            if end >= dt.date.today():
                 print('End date cannot be today or later than today. Please enter a valid end date.')
             elif end < start:
                 print('End date cannot be earlier than start date. Please enter a valid end date.')
@@ -154,7 +156,7 @@ def configure():
 # %%
 def get_url(ticker, start, end, resampleFreq, token):
     
-    '''This function returns the url for the api call.'''
+    '''This function constructs the url for the api call.'''
     
     startDate = f'{start.year}-{str(start.month).zfill(2)}-{str(start.day).zfill(2)}'
     endDate = f'{end.year}-{str(end.month).zfill(2)}-{str(end.day).zfill(2)}'
@@ -166,7 +168,7 @@ def get_url(ticker, start, end, resampleFreq, token):
 # %%
 def get_df(url, ticker):
     
-    '''This function returns a dataframe with the data from the url.'''
+    '''This function constructs a dataframe with the data from the url.'''
     
     # get data from url
     with requests.get(url) as response:
